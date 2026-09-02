@@ -1,11 +1,7 @@
 #ifndef __EASYAPP_EVENT_H__
 #define __EASYAPP_EVENT_H__
 
-#include <stdint>
-
-typedef unsigned int uint32_t;
-typedef signed int int32_t;
-typedef unsigned char uint8_t;
+#include <stdint.h>
 
 #define event_buffer_nums 256
 #define event_queue_nums 128
@@ -13,7 +9,7 @@ typedef unsigned char uint8_t;
 typedef struct easyapp_event
 {
     uint32_t event_id;
-    uint8_t event_flags;
+    uint32_t event_flags;
 
     void* event_data;
 }easyapp_event_t;

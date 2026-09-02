@@ -1,0 +1,1 @@
+#include "./inc/easyapp_core.h"
