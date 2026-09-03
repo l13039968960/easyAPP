@@ -3,11 +3,12 @@
 
 #include <stdint.h>
 
-typedef void *(*page_event_func)(void *);
+typedef int8_t (*page_event_func)(void *);
 
 typedef enum EASYAPP_REGISTERED_EVENTS
 {
-    PAGE_EVENT_HEAD = 0x00000000,
+    ALL_PAGES_HEAD = -1,
+    PAGE_EVENT_HEAD = 0,
     PAGE_EVENT_ONE,
     PAGE_EVENT_TWO,
     PAGE_EVENT_THREE,
@@ -15,7 +16,8 @@ typedef enum EASYAPP_REGISTERED_EVENTS
     PAGE_EVENT_FIVE,
     PAGE_EVENT_SIX,
     PAGE_EVENT_SEVEN,
-    PAGE_EVENT_TAIL = 0xFFFFFFFF,
+    PAGE_EVENT_TAIL = 0xFFFFFFFE,
+    ALL_PAGES_TAIL = 0xFFFFFFFF,
 }EASYAPP_RIGISTERED_EVENTS_t;
 
 typedef struct easyapp_page
@@ -26,12 +28,16 @@ typedef struct easyapp_page
 }easyapp_page_t;
 
 #define easyapp_page_register(name, fun, ...)                             \
-    __attribute__((used, section(".page_adr")))                           \
+    __attribute__((used, section(".app_page_adr")))                       \
     easyapp_page_t easyapp_page_##name = {                                \
         .func = fun,                                                      \
         .flag = 0,                                                        \
         .page_event_lists = { __VA_ARGS__ }                               \
     }
+
+extern EASYAPP_RIGISTERED_EVENTS_t ALL_PAGES_HEAD_;
+
+extern EASYAPP_RIGISTERED_EVENTS_t ALL_PAGES_TAIL_;
 
 int8_t easyapp_page_enable(easyapp_page_t * page);
 

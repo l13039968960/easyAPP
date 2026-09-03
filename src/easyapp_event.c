@@ -1,26 +1,40 @@
 #include "../inc/easyapp_event.h"
 
-static easyapp_event_t event_buffer[event_nums];
+static easyapp_event_t event_buffer[event_buffer_nums];
 static uint32_t event_buffer_idx;
 
 easyapp_eventqueue_t eventqueue;
 
-easyapp_event_t* sp_easyapp_event_create(uint32_t event_id, uint32_t event_flags, void *event_data)
+easyapp_event_t* sp_easyapp_event_get(void)
 {
-    if(event_id == 0 )
-        return -1;
+    if(eventqueue.Head == eventqueue.Tail)
+        return NULL; //FULL
+
+     easyapp_event_t* event = eventqueue.eventqueue[eventqueue.Head];
+     eventqueue.Head++;
+
+     if(eventqueue.Head == event_queue_nums)
+        eventqueue.Head = 0;
+
+    return event;
+}
+
+easyapp_event_t* sp_easyapp_event_create(EASYAPP_RIGISTERED_EVENTS_t event_id, uint32_t event_flags, void *event_data)
+{
+    if(event_id <= 0 )
+        return NULL;
 
     uint32_t count = 0;
 
     while(event_buffer[event_buffer_idx].event_id != 0)
     {
         event_buffer_idx++;
-        if(event_buffer_idx == event_nums)
+        if(event_buffer_idx == event_buffer_nums)
             event_buffer_idx = 0;
 
         count++;
-        if(count == event_nums)
-            return -2;
+        if(count == event_buffer_nums)
+            return NULL;
     }
 
     event_buffer[event_buffer_idx].event_id = event_id;
@@ -52,10 +66,9 @@ int32_t x_easyapp_event_send(easyapp_event_t *event)
 
     eventqueue.eventqueue[eventqueue.Tail] = event;
 
-    eventqueue.size++;
     eventqueue.Tail++;
     if(eventqueue.Tail == event_queue_nums)
-        eventqueue = 0;
+        eventqueue.Tail = 0;
 
     return 0;
 }
