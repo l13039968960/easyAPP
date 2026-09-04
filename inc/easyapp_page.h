@@ -2,6 +2,7 @@
 #define __EASYAPP_PAGE_H__
 
 #include <stdint.h>
+#include <stddef.h>
 
 typedef int8_t (*page_event_func)(void *);
 
@@ -16,8 +17,8 @@ typedef enum EASYAPP_REGISTERED_EVENTS
     PAGE_EVENT_FIVE,
     PAGE_EVENT_SIX,
     PAGE_EVENT_SEVEN,
-    PAGE_EVENT_TAIL = 0xFFFFFFFE,
-    ALL_PAGES_TAIL = 0xFFFFFFFF,
+    PAGE_EVENT_TAIL,
+    ALL_PAGES_TAIL,
 }EASYAPP_RIGISTERED_EVENTS_t;
 
 typedef struct easyapp_page

@@ -2,6 +2,7 @@
 #define __EASYAPP_EVENT_H__
 
 #include <stdint.h>
+#include <stddef.h>
 #include "easyapp_page.h"
 
 #define event_buffer_nums 256
