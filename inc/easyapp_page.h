@@ -36,10 +36,6 @@ typedef struct easyapp_page
         .page_event_lists = { __VA_ARGS__ }                               \
     }
 
-extern EASYAPP_RIGISTERED_EVENTS_t ALL_PAGES_HEAD_;
-
-extern EASYAPP_RIGISTERED_EVENTS_t ALL_PAGES_TAIL_;
-
 int8_t easyapp_page_enable(easyapp_page_t * page);
 
 int8_t easyapp_page_disable(easyapp_page_t * page);

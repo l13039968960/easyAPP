@@ -2,6 +2,11 @@
 #include "./inc/easyapp_page.h"
 #include "./inc/easyapp_event.h"
 
+#include <stddef.h>
+
+extern EASYAPP_RIGISTERED_EVENTS_t ALL_PAGES_HEAD_;
+extern EASYAPP_RIGISTERED_EVENTS_t ALL_PAGES_TAIL_;
+
 /*消费一个事件*/
 void easyapp_core_run(void)
 {
@@ -11,6 +16,11 @@ void easyapp_core_run(void)
     easyapp_event_t* active_event;
 
     active_event = sp_easyapp_event_get();
+
+    if(active_event == NULL)
+        return;
+    
+    // NOT NULL
     page_ptr = (uint32_t *)&ALL_PAGES_HEAD_;
     page_ptr ++;
 
