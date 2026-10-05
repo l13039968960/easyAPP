@@ -1,0 +1,31 @@
+; *************************************************************
+; *** Scatter-Loading Description File     (STM32F411CEU6 / AC6)
+; *** Flash 512KB @0x08000000 , RAM 128KB @0x20000000
+; *************************************************************
+
+LR_IROM1 0x08000000 0x0007F800  {    ; 主程序加载区(0x08000000~0x0807F7FF)
+  ER_IROM1 0x08000000 0x0007F800  {  ; 代码/常量(上限 510KB, 写满即链接报错)
+   *.o (RESET, +First)               ; 向量表: 必须占住 0x08000000
+   *(InRoot$$Sections)
+   .ANY (+RO)
+   .ANY (+XO)
+  }
+  ; RW_IRAM1 与 EASYAPP_RAM 首尾相接, 两块相加必须恒为 0x20000 (128KB)。
+  ; 改任一块都要同步另一块, 否则要么丢 RAM 要么越界。
+  RW_IRAM1 0x20000000 0x0001FC00  {  ; RW data
+   .ANY (+RW +ZI)
+  }
+  EASYAPP_RAM 0x2001FC00 0x00000400  {  ; 页标志数组(1KB, 实测远用不满)
+    *(.app_page_flag_head, +First)   ; 头锚点: 必须在区域最前
+    *(.app_page_flag)                ; 各页标志: easyapp_page_flag_<name>, 每个 8B
+    *(.app_page_flag_tail, +Last)    ; 尾锚点: 必须在最后一个页标志之后
+  }
+}
+
+; 页表单独占一个加载区域, 让 load == exec: 启动时不必从别处拷过来,
+; 烧录后 0x0807F800 就是页表本体(直接看 hex/调试器即可)。
+LR_PAGES 0x0807F800 0x00000800  {    ; 页表(2KB, 实测 ~700B 足够)
+  ER_PAGES 0x0807F800 0x00000800  {
+    *(.app_page_events)              ; 各页记录 easyapp_page_<name>, 按链接顺序连续摆放
+  }
+}
