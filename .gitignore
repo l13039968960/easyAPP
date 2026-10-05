@@ -1,3 +1,2 @@
-inc/prdef.h
-src/test.c
 .vscode
+demo/MDK-ARM/*
